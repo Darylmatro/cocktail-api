@@ -36,22 +36,22 @@ def create_data():
 def read_data():
     content = request.json
     view_query = []
-    pulled_data = coll.find({"Nom":content['Nom']})
+    pulled_data = coll.find({"name":content['name']})
     for e in pulled_data:
-        view_query.append({"Nom":e['Nom'], "Alcool": e['Alcool']})
+        view_query.append({"name":e['name'], "alcohol": e['alcohol']})
     return jsonify(view_query)
 
 
 def update_data():
     content = request.json
-    value = {"$set" :{"Alcool":content['Alcool']}}
-    coll.update_one({"Nom":content['Nom']}, value)
+    value = {"$set" :{"alcohol":content['alcohol']}}
+    coll.update_one({"name":content['name']}, value)
     return "Data updated"
 
 
 def delete_data():
     content = request.json
-    coll.delete_one({"Nom":content['Nom']})
+    coll.delete_one({"name":content['name']})
     return "Data deleted"
 
 
