@@ -6,6 +6,8 @@ from flask_app.api.crud_db import create_data, read_data, update_data, delete_da
 
 from flask_app.api.display_test import display_test
 
+from flask_app.api.users import create_user, login
+
 app = Flask(__name__)
 cors = CORS(app, origins='*')
 #app.config["CORS_HEADERS"] = "Content-Type"
@@ -47,3 +49,11 @@ def display():
     retour = display_test()
     print(retour)
     return retour
+
+@app.route("/create_user", methods=['POST'])
+def route_create_user():
+    return create_user()
+
+@app.route("/login", methods=['POST'])
+def route_login():
+    return login()
