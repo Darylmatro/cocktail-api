@@ -3,13 +3,15 @@
 ## Environnement Virtuel
 Création de l'environnement virtuel '.venv' dans le dossier 'back-end':
 
+`python -m venv .venv`
+ou
 `python3 -m venv .venv`
 
 Activation de l'environnement virtuel
 
 `.venv/bin/activate`
 ou
-`.venv/Script/activate`
+`.venv/Scripts/activate`
 
 pour désactiver l'environnement virtuel:
 `deactivate`
