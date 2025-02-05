@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ajout de styles globaux si nécessaire */
+body {
+    @apply bg-gray-100 text-gray-900;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Ajout de classes personnalisées si besoin */
+.container {
+    @apply max-w-7xl mx-auto px-4;
+}
+
+.button {
+    @apply bg-orange-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-orange-600 transition;
+}
