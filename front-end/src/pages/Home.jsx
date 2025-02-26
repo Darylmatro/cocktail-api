@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import CocktailList from "../components/CocktailList";
+import CocktailList from "../components/CocktailsList";
 
 function Home() {
   const [cocktails, setCocktails] = useState([]);

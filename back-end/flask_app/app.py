@@ -20,7 +20,7 @@ coll = db['TEST_cocktail_collection'] '''
 
 @app.route("/")
 def home():
-    return "<p>homepage</p>"
+    return "<p>Home²</p>"
 
 
 
