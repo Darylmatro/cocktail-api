@@ -22,8 +22,6 @@ function DetailCocktail() {
         fetchAPI();
     }, [name]);
 
-    console.log(data);
-
     return (
         <div>
             <h2>Information sur le cocktail {}</h2>
@@ -50,6 +48,8 @@ function DetailCocktail() {
             ))
             }
             </div>
+            <a href={`/cocktail/update/${name}`} className='m-2 p-2 rounded bg-sky-700 text-white'>Modifier le cocktail</a>
+            <a href='' className='m-2 p-2 rounded bg-sky-700 text-white'>Supprimer le cocktail</a>
         </div>
     );
 }

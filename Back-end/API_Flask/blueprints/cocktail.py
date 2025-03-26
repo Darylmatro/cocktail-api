@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify
 from API_Flask.database import Database
+from flask_cors import CORS
 
 cocktail_api = Blueprint('cocktail_api', __name__)
+cors = CORS(cocktail_api, origins='*')
 
 connexion_test = Database()
 cocktail_collection = connexion_test.get_database["cocktails-collection"]
@@ -40,20 +42,16 @@ def cocktail_create():
     try:
         already_exist = cocktail_collection.find_one({"name": data["name"]})
         if already_exist != None:
-            print(already_exist)
-            print("AAAAAAAAAAAAAAAAAAA")
             return jsonify({"message": "Ce cocktail existe déjà"})
         else:
-            print("BBBBBBBBBBBBBBBBBB")
             cocktail_collection.insert_one(data)
             return jsonify({"message": "Données insérées"})
     except Exception as e:
-        print("CCCCCCCCCCCCCCCCCCCC")
         print("Erreur: ", e)
         return jsonify({"message": "Erreur lors de l'insertion"})
 
 
-# Recherche d'un cocktail un cocktail spécifique (TODO)
+# Recherche d'un cocktail un cocktail spécifique
 @cocktail_api.route('/api/cocktail/read/<cocktail_name>', methods=['GET', 'POST'])
 def cocktail_read(cocktail_name):
     print(f"URL appelée : {request.url}") # Debug
@@ -72,9 +70,15 @@ def cocktail_read(cocktail_name):
 
 # Mettre à jour un cocktail (TODO)
 @cocktail_api.route('/api/cocktail/update', methods=['GET', 'POST'])
-def cocktail_update(searched_data, updated_data):
-    #cocktail_collection.update_one(searched_data, updated_data)
-    return jsonify({"message": "Données mises à jour"})
+def cocktail_update():
+    updated_data = request.json
+    to_update = cocktail_collection.find_one({"name":updated_data["name"]})
+    try:
+        cocktail_collection.update_one(to_update, {"$set": updated_data})
+        return jsonify({"message": "Données mises à jour"})
+    except Exception as e:
+        print("Erreur: ", e)
+        return jsonify({"message": "Erreur lors de la mise à jour"})
 
 
 # Supprimer un cocktail (TODO)
