@@ -49,8 +49,9 @@ function NewCocktail() {
         };
         console.log(data);
         try {
-            await axios.post('http://localhost:5000/api/cocktail/create', data);
-            alert("Cocktail ajouté avec succès");
+            const response = await axios.post('http://localhost:5000/api/cocktail/create', data);
+            console.log(response.data);
+            alert(response.data.message);
             resetForm();
             window.location.reload();
         } catch (error) {
@@ -75,7 +76,7 @@ function NewCocktail() {
                 <div className='grid grid-cols-2 justify-around bg-sky-500 p-2 my-2'>
                     <label htmlFor='alcohol'>Alcool</label>
                     <input type='checkbox' id='alcohol' name='alcohol' 
-                    checked={alcohol} onChange={(e) => setAlcohol(e.target.value)}/>
+                    checked={alcohol} onChange={(e) => setAlcohol(e.target.checked)}/>
                 </div>
 
                 <div className='grid grid-cols-2 justify-around bg-sky-500 p-2 my-2'>
