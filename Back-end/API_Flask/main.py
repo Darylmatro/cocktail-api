@@ -6,9 +6,11 @@ from pymongo.server_api import ServerApi
 
 from API_Flask.database import Database
 from API_Flask.blueprints.cocktail import cocktail_api
+from API_Flask.blueprints.auth import auth_api
 
 app = Flask(__name__)
 app.register_blueprint(cocktail_api)
+app.register_blueprint(auth_api, url_prefix='/auth')
 
 # mdp: cocktail-db
 
