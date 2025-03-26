@@ -24,22 +24,27 @@ def cocktail_list():
 @cocktail_api.route('/api/cocktail/create', methods=['GET', 'POST']) 
 def cocktail_create():
     data = request.json
-    print(data)
-    '''data = {"name": "cocktail1",
+    '''Exemple de donnése à insérer:
+    data = {"name": "cocktail1",
             "alcohol": True,
             "alcohol_level": 5,
             "ingredients": ["ingredient1", "ingredient2"],
             "prepation": "preparation1",
             }'''
-    #test_collection.insert_one(data)
+    try:
+        test_collection.insert_one(data)
+    except Exception as e:
+        print("Erreur: ", e)
+        return jsonify({"message": "Erreur lors de l'insertion"})
     return jsonify({"message": "Données insérées"})
 
 
 @cocktail_api.route('/api/cocktail/read', methods=['GET', 'POST'])
 def cocktail_read():
-    searched_data = "test1"
+    searched_data = "cocktail1"
     data_list = []
-    for data in test_collection.find({"valeur":searched_data}):
+    for data in test_collection.find({"name":searched_data}):
+        print(data)
         data.pop("_id")
         data_list.append(data)
     return jsonify(data)
