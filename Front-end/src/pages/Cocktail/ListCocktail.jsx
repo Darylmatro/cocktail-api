@@ -43,6 +43,7 @@ function ListCocktail() {
                             <p>Préparation: (à retirer, juste pour le test d'affichage)</p>
                             <p>{cocktail.preparation}</p>
                         </div>
+                        <a href={`/cocktail/detail/${cocktail.name}`} className='bg-sky-500 hover:bg-sky-600 p-2 m-2 rounded'>Voir le cocktail</a>
                     </li>
                 ))
                 }

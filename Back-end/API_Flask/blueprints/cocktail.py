@@ -52,13 +52,14 @@ def cocktail_create():
 # Recherche d'un cocktail un cocktail spécifique (TODO)
 @cocktail_api.route('/api/cocktail/read/<cocktail_name>', methods=['GET', 'POST'])
 def cocktail_read(cocktail_name):
+    print(f"URL appelée : {request.url}") # Debug
     data_list = []
     try:
         for data in cocktail_collection.find({"name":cocktail_name}):
             print(data)
             data.pop("_id")
             data_list.append(data)
-        print("Cocktail trouvé: ", data_list)
+            print("Cocktail trouvé: ", data)
         return jsonify(data_list)
     except Exception as e:
         print("Erreur: ", e)
