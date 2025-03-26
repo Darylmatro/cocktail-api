@@ -49,8 +49,9 @@ function NewCocktail() {
         };
         console.log(data);
         try {
-            await axios.post('http://localhost:5000/api/cocktail/create', data);
-            alert("Cocktail ajouté avec succès");
+            const response = await axios.post('http://localhost:5000/api/cocktail/create', data);
+            console.log(response.data);
+            alert(response.data.message);
             resetForm();
             window.location.reload();
         } catch (error) {

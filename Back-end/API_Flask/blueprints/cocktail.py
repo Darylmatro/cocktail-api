@@ -39,12 +39,16 @@ def cocktail_create():
             }'''
     try:
         already_exist = cocktail_collection.find_one({"name": data["name"]})
-        if already_exist != []:
+        if already_exist != None:
+            print(already_exist)
+            print("AAAAAAAAAAAAAAAAAAA")
             return jsonify({"message": "Ce cocktail existe déjà"})
         else:
+            print("BBBBBBBBBBBBBBBBBB")
             cocktail_collection.insert_one(data)
             return jsonify({"message": "Données insérées"})
     except Exception as e:
+        print("CCCCCCCCCCCCCCCCCCCC")
         print("Erreur: ", e)
         return jsonify({"message": "Erreur lors de l'insertion"})
 

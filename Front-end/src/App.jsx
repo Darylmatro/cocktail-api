@@ -21,7 +21,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
 
         <Route path="/cocktail/list" element={<ListCocktail />} />
-        <Route path="/cocktail/detail" element={<DetailCocktail />} />
+        <Route path="/cocktail/detail/:name" element={<DetailCocktail />} />
         <Route path="/cocktail/search" element={<SearchCocktail />} />
         <Route path="/cocktail/new" element={<NewCocktail />} />
         
