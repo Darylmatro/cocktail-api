@@ -8,6 +8,7 @@ import ListCocktail from './pages/Cocktail/ListCocktail'
 import DetailCocktail from './pages/Cocktail/DetailCocktail'
 import SearchCocktail from './pages/Cocktail/SearchCocktail'
 import NewCocktail from './pages/Cocktail/NewCocktail'
+import UpdateCocktail from './pages/Cocktail/UpdateCocktail'
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/cocktail/detail/:name" element={<DetailCocktail />} />
         <Route path="/cocktail/search" element={<SearchCocktail />} />
         <Route path="/cocktail/new" element={<NewCocktail />} />
+        <Route path="/cocktail/update/:name" element={<UpdateCocktail />} />
         
       </Routes>
     </Router>
