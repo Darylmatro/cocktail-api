@@ -76,7 +76,7 @@ function NewCocktail() {
                 <div className='grid grid-cols-2 justify-around bg-sky-500 p-2 my-2'>
                     <label htmlFor='alcohol'>Alcool</label>
                     <input type='checkbox' id='alcohol' name='alcohol' 
-                    checked={alcohol} onChange={(e) => setAlcohol(e.target.value)}/>
+                    checked={alcohol} onChange={(e) => setAlcohol(e.target.checked)}/>
                 </div>
 
                 <div className='grid grid-cols-2 justify-around bg-sky-500 p-2 my-2'>
