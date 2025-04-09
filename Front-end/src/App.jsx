@@ -9,7 +9,6 @@ import CGU from './pages/CGU'
 import Cookies from './pages/Cookies'
 import Accessibilite from './pages/Accessibilite'
 
-import NavBarTestCocktail from './pages/TestCocktail/navBarTestCocktail'
 import ListCocktail from './pages/TestCocktail/ListCocktail'
 import DetailCocktail from './pages/TestCocktail/DetailCocktail'
 import SearchCocktail from './pages/TestCocktail/SearchCocktail'
