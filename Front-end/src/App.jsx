@@ -15,6 +15,10 @@ import DetailCocktail from './pages/TestCocktail/DetailCocktail'
 import SearchCocktail from './pages/TestCocktail/SearchCocktail'
 import NewCocktail from './pages/TestCocktail/NewCocktail'
 
+import Login from './pages/Users/Login'
+import Register from './pages/Users/Register'
+
+
 function App() {
   return (
     <>
@@ -67,6 +71,9 @@ function App() {
           <Route path="/testCocktail/detail/:name" element={<DetailCocktail />} />
           <Route path="/testCocktail/search" element={<SearchCocktail />} />
           <Route path="/testCocktail/new" element={<NewCocktail />} />
+
+          <Route path="/connexion" element={<Login />} />
+          <Route path="/inscription" element={<Register />} />
           
           {/* Legal pages */}
           <Route path="/mentions-legales" element={<MentionsLegales />} />
