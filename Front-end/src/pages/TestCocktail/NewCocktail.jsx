@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 
 function NewCocktail() {
 
@@ -28,6 +28,15 @@ function NewCocktail() {
     };
 
 
+    const resetForm = () => {
+        setName("");
+        setAlcohol(false);
+        setAlcohol_level(0);
+        setIngredients([""]);
+        setPreparation("");
+    };
+
+
     //envoi des données vers l'api falsk
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -39,7 +48,17 @@ function NewCocktail() {
             preparation: preparation,
         };
         console.log(data);
-        // await axios.post('http://localhost:5000/api/cocktail/create', data);
+        try {
+            const response = await axios.post('http://localhost:5000/api/cocktail/create', data);
+            console.log(response.data);
+            alert(response.data.message);
+            resetForm();
+            window.location.reload();
+        } catch (error) {
+            alert("Erreur lors de l'ajout du cocktail");
+            console.error(error);
+        }
+        
     }
 
 
@@ -57,7 +76,7 @@ function NewCocktail() {
                 <div className='grid grid-cols-2 justify-around bg-sky-500 p-2 my-2'>
                     <label htmlFor='alcohol'>Alcool</label>
                     <input type='checkbox' id='alcohol' name='alcohol' 
-                    checked={alcohol} onChange={(e) => setAlcohol(e.target.value)}/>
+                    checked={alcohol} onChange={(e) => setAlcohol(e.target.checked)}/>
                 </div>
 
                 <div className='grid grid-cols-2 justify-around bg-sky-500 p-2 my-2'>
