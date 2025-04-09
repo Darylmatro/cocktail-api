@@ -64,7 +64,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
 
           <Route path="/testCocktail/list" element={<ListCocktail />} />
-          <Route path="/testCocktail/detail" element={<DetailCocktail />} />
+          <Route path="/testCocktail/detail/:name" element={<DetailCocktail />} />
           <Route path="/testCocktail/search" element={<SearchCocktail />} />
           <Route path="/testCocktail/new" element={<NewCocktail />} />
           

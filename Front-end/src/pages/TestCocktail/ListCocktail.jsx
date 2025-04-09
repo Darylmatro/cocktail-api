@@ -218,7 +218,7 @@ function ListCocktail() {
                                 
                                 <div className="mt-6 flex justify-center">
                                     <Link 
-                                        to={`/testCocktail/detail?id=${cocktail.id || index}`} 
+                                        to={`/testCocktail/detail/${cocktail.name || index}`} 
                                         className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full transition duration-300"
                                     >
                                         Voir la recette
