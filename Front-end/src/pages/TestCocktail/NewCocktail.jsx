@@ -8,6 +8,7 @@ function NewCocktail() {
     const [alcohol, setAlcohol] = useState(false);
     const [alcohol_level, setAlcohol_level] = useState(0);
     const [preparation, setPreparation] = useState("");
+    const [categorie, setCategorie] = useState("classique")
 
     // Fonction pour ajouter un champ d'ingrédient
     const addIngredient = () => {
@@ -34,6 +35,7 @@ function NewCocktail() {
         setAlcohol_level(0);
         setIngredients([""]);
         setPreparation("");
+        setCategorie("classique")
     };
 
 
@@ -46,6 +48,7 @@ function NewCocktail() {
             alcohol_level: alcohol_level,
             ingredients: ingredients,
             preparation: preparation,
+            categorie: categorie
         };
         console.log(data);
         try {
@@ -121,6 +124,16 @@ function NewCocktail() {
                     <label htmlFor='preparation'>Préparation</label>
                     <textarea id='preparation' name='preparation' className='bg-gray-100 text-black' 
                     value={preparation} onChange={(e) => setPreparation(e.target.value)}/>
+                </div>
+
+                <div className='grid grid-cols-2 justify-around bg-sky-500 p-2 my-2'>
+                    <label htmlFor='categorie'>Catégorie</label>
+                    <select className='bg-gray-100 text-black' name="categorie" id="categorie" onChange={(e) => setCategorie(e.target.value)}>
+                        <option value="Classique">Classique</option>
+                        <option value="Fruité">Fruité</option>
+                        <option value="Cocktail Tropicaux">Cocktail Tropicaux</option>
+                        <option value="Mocktail">Mocktail</option>
+                    </select>
                 </div>
 
                 <div className='flex justify-around p-2 my-2'>
