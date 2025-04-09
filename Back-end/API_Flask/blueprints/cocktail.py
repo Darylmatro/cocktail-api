@@ -1,10 +1,9 @@
 from flask import Blueprint, request, jsonify
 from API_Flask.database import Database
 
-cocktail_api = Blueprint('cocktail_api', __name__)
-
-connexion_test = Database()
-cocktail_collection = connexion_test.get_database["cocktails-collection"]
+cocktail_api = Blueprint('cocktail', __name__)
+db = Database()
+cocktail_collection = db.get_database["cocktails"]
 
 # TODO
 # Ajouter les routes suivantes:
@@ -12,82 +11,90 @@ cocktail_collection = connexion_test.get_database["cocktails-collection"]
 # - Créer un cocktail
 # Lister les cocktails avec filtres (route supplémentaire)
 
-# Liste des cocktails
-@cocktail_api.route('/api/cocktail/list', methods=['GET', 'POST'])
-def cocktail_list():
-    data_list = []
+@cocktail_api.route('/api/cocktail/list', methods=['GET'])
+def get_cocktails():
     try:
-        for data in cocktail_collection.find():
-            data.pop("_id")
-            data_list.append(data)
-        return jsonify(data_list)
+        cocktails = list(cocktail_collection.find())
+        for cocktail in cocktails:
+            cocktail['_id'] = str(cocktail['_id'])
+        return jsonify(cocktails)
     except Exception as e:
-        print("Erreur: ", e)
-        return jsonify({"message": "Erreur lors de la récupération des données"})
+        print("Erreur:", e)
+        return jsonify({"error": "Erreur lors de la récupération des cocktails"}), 500
 
-
-# Création d'un cocktail
-@cocktail_api.route('/api/cocktail/create', methods=['GET', 'POST']) 
-def cocktail_create():
-    data = request.json
-    '''Exemple de donnése à insérer:
-    data = {"name": "cocktail1",
-            "alcohol": True,
-            "alcohol_level": 5,
-            "ingredients": ["ingredient1", "ingredient2"],
-            "prepation": "preparation1",
-            }'''
-    try:
-        already_exist = cocktail_collection.find_one({"name": data["name"]})
-        if already_exist != None:
-<<<<<<< HEAD
-            print(already_exist)
-            print("AAAAAAAAAAAAAAAAAAA")
-            return jsonify({"message": "Ce cocktail existe déjà"})
-        else:
-            print("BBBBBBBBBBBBBBBBBB")
-            cocktail_collection.insert_one(data)
-            return jsonify({"message": "Données insérées"})
-    except Exception as e:
-        print("CCCCCCCCCCCCCCCCCCCC")
-=======
-            return jsonify({"message": "Ce cocktail existe déjà"})
-        else:
-            cocktail_collection.insert_one(data)
-            return jsonify({"message": "Données insérées"})
-    except Exception as e:
->>>>>>> f98e25eed775304645876a22f64a0517e4934a9d
-        print("Erreur: ", e)
-        return jsonify({"message": "Erreur lors de l'insertion"})
-
-
-# Recherche d'un cocktail un cocktail spécifique (TODO)
-@cocktail_api.route('/api/cocktail/read/<cocktail_name>', methods=['GET', 'POST'])
-def cocktail_read(cocktail_name):
-    print(f"URL appelée : {request.url}") # Debug
-    data_list = []
-    try:
-        for data in cocktail_collection.find({"name":cocktail_name}):
-            print(data)
-            data.pop("_id")
-            data_list.append(data)
-            print("Cocktail trouvé: ", data)
-        return jsonify(data_list)
-    except Exception as e:
-        print("Erreur: ", e)
-        return jsonify({"message": "Erreur lors de la récupération des données"})
+@cocktail_api.route('/api/cocktail/new', methods=['POST'])
+def create_cocktail():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Aucune donnée fournie"}), 400
     
+    try:
+        cocktail_collection.insert_one(data)
+        return jsonify({"message": "Cocktail créé avec succès"}), 201
+    except Exception as e:
+        print("Erreur:", e)
+        return jsonify({"error": "Erreur lors de la création du cocktail"}), 500
 
-# Mettre à jour un cocktail (TODO)
-@cocktail_api.route('/api/cocktail/update', methods=['GET', 'POST'])
-def cocktail_update(searched_data, updated_data):
-    #cocktail_collection.update_one(searched_data, updated_data)
-    return jsonify({"message": "Données mises à jour"})
+@cocktail_api.route('/api/cocktail/search', methods=['GET'])
+def search_cocktails():
+    query = request.args.get('q', '')
+    if not query:
+        return jsonify({"error": "Aucun terme de recherche fourni"}), 400
+    
+    try:
+        cocktails = list(cocktail_collection.find({
+            "$or": [
+                {"name": {"$regex": query, "$options": "i"}},
+                {"ingredients": {"$regex": query, "$options": "i"}}
+            ]
+        }))
+        
+        for cocktail in cocktails:
+            cocktail['_id'] = str(cocktail['_id'])
+        return jsonify(cocktails)
+    except Exception as e:
+        print("Erreur:", e)
+        return jsonify({"error": "Erreur lors de la recherche"}), 500
 
+@cocktail_api.route('/api/cocktail/detail/<id>', methods=['GET'])
+def get_cocktail_detail(id):
+    try:
+        cocktail = cocktail_collection.find_one({"_id": id})
+        if not cocktail:
+            return jsonify({"error": "Cocktail non trouvé"}), 404
+        
+        cocktail['_id'] = str(cocktail['_id'])
+        return jsonify(cocktail)
+    except Exception as e:
+        print("Erreur:", e)
+        return jsonify({"error": "Erreur lors de la récupération du cocktail"}), 500
 
-# Supprimer un cocktail (TODO)
-@cocktail_api.route('/api/cocktail/delete', methods=['GET', 'POST'])
-def cocktail_delete(searched_data):
-    #cocktail_collection.delete_one(searched_data)
-    return jsonify({"message": "Données supprimées"})
+@cocktail_api.route('/api/cocktail/update/<id>', methods=['PUT'])
+def update_cocktail(id):
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Aucune donnée fournie"}), 400
+    
+    try:
+        result = cocktail_collection.update_one(
+            {"_id": id},
+            {"$set": data}
+        )
+        if result.modified_count == 0:
+            return jsonify({"error": "Cocktail non trouvé"}), 404
+        return jsonify({"message": "Cocktail mis à jour avec succès"}), 200
+    except Exception as e:
+        print("Erreur:", e)
+        return jsonify({"error": "Erreur lors de la mise à jour du cocktail"}), 500
+
+@cocktail_api.route('/api/cocktail/delete/<id>', methods=['DELETE'])
+def delete_cocktail(id):
+    try:
+        result = cocktail_collection.delete_one({"_id": id})
+        if result.deleted_count == 0:
+            return jsonify({"error": "Cocktail non trouvé"}), 404
+        return jsonify({"message": "Cocktail supprimé avec succès"}), 200
+    except Exception as e:
+        print("Erreur:", e)
+        return jsonify({"error": "Erreur lors de la suppression du cocktail"}), 500
 

@@ -6,7 +6,7 @@ auth_api = Blueprint('auth', __name__)
 db = Database()
 users_collection = db.get_database["users"]
 
-@auth_api.route('/register', methods=['POST'])
+@auth_api.route('/auth/register', methods=['POST'])
 def register():
     data = request.get_json()
     
@@ -32,7 +32,7 @@ def register():
     users_collection.insert_one(user)
     return jsonify({"message": "User created successfully"}), 201
 
-@auth_api.route('/login', methods=['POST'])
+@auth_api.route('/auth/login', methods=['POST'])
 def login():
     data = request.get_json()
     
