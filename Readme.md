@@ -3,15 +3,15 @@
 ## Environnement Virtuel
 Création de l'environnement virtuel '.venv' dans le dossier 'back-end':
 
-Windows: `python -m venv .venv`
+`python -m venv .venv`
 ou
-MacOS: `python3 -m venv .venv`
+`python3 -m venv .venv`
 
 Activation de l'environnement virtuel
 
-Windows: `.venv/Scripts/activate`
+`.venv/bin/activate`
 ou
-MacOS: `.venv/bin/activate`
+`.venv/Scripts/activate`
 
 pour désactiver l'environnement virtuel:
 `deactivate`
@@ -20,7 +20,3 @@ pour désactiver l'environnement virtuel:
 ## Installation des librairies
 Après avoir activé l'environnement virtuel, executer la commande:
 `pip install -r requirements.txt`
-
-
-## Installation des dépendances React
-`npm install`
