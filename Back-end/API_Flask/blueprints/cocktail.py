@@ -9,10 +9,7 @@ connexion_test = Database()
 cocktail_collection = connexion_test.get_database["cocktails-collection"]
 
 # TODO
-# Ajouter les routes suivantes:
-# Frontend pour les routes:
-# - Créer un cocktail
-# Lister les cocktails avec filtres (route supplémentaire)
+# newCocktail: ajout option Catégorie
 
 # Liste des cocktails
 @cocktail_api.route('/api/cocktail/list', methods=['GET', 'POST'])
@@ -38,6 +35,7 @@ def cocktail_create():
             "alcohol_level": 5,
             "ingredients": ["ingredient1", "ingredient2"],
             "prepation": "preparation1",
+            "categorie": "categorie1",
             }'''
     try:
         already_exist = cocktail_collection.find_one({"name": data["name"]})
