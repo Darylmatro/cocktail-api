@@ -79,9 +79,14 @@ def cocktail_update():
         return jsonify({"message": "Erreur lors de la mise à jour"})
 
 
-# Supprimer un cocktail (TODO)
-@cocktail_api.route('/api/cocktail/delete', methods=['GET', 'POST'])
-def cocktail_delete(searched_data):
-    #cocktail_collection.delete_one(searched_data)
-    return jsonify({"message": "Données supprimées"})
+# Supprimer un cocktail
+@cocktail_api.route('/api/cocktail/delete/<cocktail_name>', methods=['GET', 'POST'])
+def cocktail_delete(cocktail_name):
+    try:
+        print("url donné:", cocktail_name)
+        cocktail_collection.delete_one({"name":cocktail_name})
+        return jsonify({"message": "Données supprimées"})
+    except Exception as e:
+        print("Erreur: ", e)
+        return jsonify({"message": "Erreur lors de la suppression"})
 

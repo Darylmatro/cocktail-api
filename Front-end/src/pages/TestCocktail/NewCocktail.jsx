@@ -3,6 +3,9 @@ import axios from 'axios';
 
 function NewCocktail() {
 
+    const user = localStorage.getItem("user");
+    const userData = user ? JSON.parse(user) : null;
+
     const [ingredients, setIngredients] = useState([""]);
     const [name, setName] = useState("");
     const [alcohol, setAlcohol] = useState(false);
@@ -48,7 +51,8 @@ function NewCocktail() {
             alcohol_level: alcohol_level,
             ingredients: ingredients,
             preparation: preparation,
-            categorie: categorie
+            categorie: categorie,
+            author: userData.username
         };
         console.log(data);
         try {

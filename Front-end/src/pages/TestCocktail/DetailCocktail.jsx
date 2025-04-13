@@ -1,11 +1,15 @@
 import React, { useState , useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function DetailCocktail() {
 
     const { name } = useParams();
+    const navigate = useNavigate();
     const [data, setData] = useState([]);
+
+    const user = localStorage.getItem("user");
+    const userData = user ? JSON.parse(user) : null;
 
     const fetchAPI = async () => {
         try {
@@ -22,8 +26,20 @@ function DetailCocktail() {
         fetchAPI();
     }, [name]);
 
+    const handleDelete = async (cocktailName) => {
+        console.log(cocktailName)
+        try {
+            const response = await axios.post(`http://localhost:5000/api/cocktail/delete/${cocktailName}`, data);
+            alert("Cocktail supprimé avec succès !");
+            navigate('/testCocktail/list')
+        } catch (erreur) {
+            console.error(erreur);
+        }
+    }
+
     return (
         <div>
+            <p>Connecté en tant que: {userData.username}</p>
             <h2>Information sur le cocktail {}</h2>
             <div>
             {data.map((cocktail, index) => (
@@ -44,12 +60,16 @@ function DetailCocktail() {
                         <p>Préparation: </p>
                         <p>{cocktail.preparation}</p>
                     </div>
+                    <p>Auteur: {cocktail.author}</p>
+
+                    {userData && userData.username === cocktail.author && (
+                        <button className='m-2 p-2 rounded bg-sky-700 text-white' onClick={() => handleDelete(cocktail.name)}>Supprimer le cocktail</button>
+                    )}
                 </div>
             ))
             }
             </div>
-            <a href={`/cocktail/update/${name}`} className='m-2 p-2 rounded bg-sky-700 text-white'>Modifier le cocktail</a>
-            <a href='' className='m-2 p-2 rounded bg-sky-700 text-white'>Supprimer le cocktail</a>
+            
         </div>
     );
 }
