@@ -33,6 +33,7 @@ function Login() {
           "user",
           JSON.stringify({
             username: data.username,
+            id: data.id,
             email: data.email,
           })
         );

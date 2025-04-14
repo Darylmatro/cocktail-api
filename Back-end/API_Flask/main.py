@@ -18,4 +18,8 @@ cors = CORS(app, origins='*')
 
 @app.route('/')
 def home():
-    return "<p>Cocktail API</p><a href='http://localhost:5000/api/cocktail/list'>Liste des cocktails</a>" 
+    return "<p>Cocktail API</p><a href='http://localhost:5000/api/cocktail/list'>Liste des cocktails</a>"
+
+if __name__ == "__main__":
+    print("Connecté à la base de données")
+    app.run(debug=True)

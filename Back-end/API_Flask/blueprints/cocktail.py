@@ -80,7 +80,7 @@ def cocktail_update():
 
 
 # Supprimer un cocktail (TODO)
-@cocktail_api.route('/api/cocktail/delete', methods=['GET', 'POST'])
+@cocktail_api.route('/api/cocktail/delete/<cocktail_name>', methods=['GET', 'POST'])
 def cocktail_delete(searched_data):
     #cocktail_collection.delete_one(searched_data)
     return jsonify({"message": "Données supprimées"})
