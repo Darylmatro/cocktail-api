@@ -29,7 +29,7 @@ function DetailCocktail() {
     const handleDelete = async (cocktailName) => {
         console.log(cocktailName)
         try {
-            const response = await axios.post(`http://localhost:5000/api/cocktail/delete/${cocktailName}`, data);
+            await axios.post(`http://localhost:5000/api/cocktail/delete/${cocktailName}`, data);
             alert("Cocktail supprimé avec succès !");
             navigate('/testCocktail/list')
         } catch (erreur) {
@@ -39,7 +39,6 @@ function DetailCocktail() {
 
     return (
         <div>
-            <p>Connecté en tant que: {userData.username}</p>
             <h2>Information sur le cocktail {}</h2>
             <div>
             {data.map((cocktail, index) => (
@@ -61,6 +60,8 @@ function DetailCocktail() {
                         <p>{cocktail.preparation}</p>
                     </div>
                     <p>Auteur: {cocktail.author}</p>
+
+                    <button onClick={() => navigate(`/testCocktail/detail/${name}/api`)}>API Cocktail</button>
 
                     {userData && userData.username === cocktail.author && (
                         <button className='m-2 p-2 rounded bg-sky-700 text-white' onClick={() => handleDelete(cocktail.name)}>Supprimer le cocktail</button>

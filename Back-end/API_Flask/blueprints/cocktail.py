@@ -6,7 +6,7 @@ cocktail_api = Blueprint('cocktail_api', __name__)
 cors = CORS(cocktail_api, origins='*')
 
 connexion_test = Database()
-cocktail_collection = connexion_test.get_database["cocktails-collection"]
+cocktail_collection = connexion_test.get_database["cocktails"]
 
 # TODO
 # newCocktail: ajout option Catégorie

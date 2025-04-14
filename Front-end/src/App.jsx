@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import MentionsLegales from "./pages/MentionsLegales";
@@ -10,7 +10,9 @@ import Cookies from "./pages/Cookies";
 import Accessibilite from "./pages/Accessibilite";
 
 import ListCocktail from "./pages/TestCocktail/ListCocktail";
+import APIListCocktail from "./pages/TestCocktail/ApiListCocktail";
 import DetailCocktail from "./pages/TestCocktail/DetailCocktail";
+import APIDetailCocktail from "./pages/TestCocktail/ApiDetailCocktail";
 import SearchCocktail from "./pages/TestCocktail/SearchCocktail";
 import NewCocktail from "./pages/TestCocktail/NewCocktail";
 
@@ -35,11 +37,15 @@ function App() {
     window.location.href = "/";
   };
 
+  const routeAPI = location.pathname.endsWith("/api");
+
   return (
     <>
       <Router>
-        {/* Header */}
+
+        {!routeAPI && (
         <header className="bg-white shadow-md">
+        {/* Header */}
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             {/* Logo et titre */}
             <div className="flex items-center">
@@ -130,6 +136,7 @@ function App() {
             </div>
           </div>
         </header>
+        )}
 
         {/* Contenu principal */}
         <main className="min-h-screen">
@@ -138,10 +145,11 @@ function App() {
             <Route path="*" element={<NotFound />} />
 
             <Route path="/testCocktail/list" element={<ListCocktail />} />
-            <Route
-              path="/testCocktail/detail/:name"
-              element={<DetailCocktail />}
-            />
+            <Route path="/testCocktail/list/api" element={<APIListCocktail />} />
+
+            <Route path="/testCocktail/detail/:name" element={<DetailCocktail />} />
+            <Route path="/testCocktail/detail/:name/api" element={<APIDetailCocktail />} />
+
             <Route path="/testCocktail/search" element={<SearchCocktail />} />
             <Route path="/testCocktail/new" element={<NewCocktail />} />
 
@@ -161,8 +169,9 @@ function App() {
           </Routes>
         </main>
 
-        {/* Footer */}
+        {!routeAPI && (
         <footer className="bg-gray-800 text-white py-10">
+        {/* Footer */}
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               {/* Logo et description */}
@@ -377,6 +386,7 @@ function App() {
             </div>
           </div>
         </footer>
+        )}
       </Router>
     </>
   );
