@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 function NewCocktail() {
+
+    const navigate = useNavigate();
 
     const user = localStorage.getItem("user");
     const userData = user ? JSON.parse(user) : null;
@@ -60,7 +63,8 @@ function NewCocktail() {
             console.log(response.data);
             alert(response.data.message);
             resetForm();
-            window.location.reload();
+            navigate("/testCocktail/list");
+            //window.location.reload();
         } catch (error) {
             alert("Erreur lors de l'ajout du cocktail");
             console.error(error);
