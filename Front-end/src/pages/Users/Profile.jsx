@@ -5,55 +5,47 @@ const Profile = () => {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-  });
+  const [formData, setFormData] = useState({ username: "", email: "" });
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
   const navigate = useNavigate();
 
+  // Chargement des infos utilisateur
   useEffect(() => {
     const userData = localStorage.getItem("user");
     if (!userData) {
       navigate("/connexion");
       return;
     }
+
     const parsedUser = JSON.parse(userData);
     setUser(parsedUser);
     setFormData({
-      username: parsedUser.username,
-      email: parsedUser.email,
+      username: parsedUser.username || "",
+      email: parsedUser.email || "",
     });
   }, [navigate]);
 
+  // Gestion des champs de formulaire
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-    // Réinitialiser les messages
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
     setError("");
     setSuccessMessage("");
   };
 
+  // Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccessMessage("");
     setIsLoading(true);
 
-    // Assurez-vous que les valeurs sont définies
-    console.log("userId:", user._id);
-    console.log("username:", formData.username);
-    console.log("email:", formData.email);
-
     try {
       const response = await fetch("http://localhost:5000/api/users/update", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: user._id,
           username: formData.username,
@@ -63,11 +55,8 @@ const Profile = () => {
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || "Erreur lors de la mise à jour");
-      }
+      if (!response.ok) throw new Error(data.error || "Erreur de mise à jour");
 
-      // Mettre à jour les données locales
       const updatedUser = { ...user, ...formData };
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setUser(updatedUser);
@@ -81,9 +70,12 @@ const Profile = () => {
     }
   };
 
-  if (!user) {
-    return <div>Chargement...</div>;
-  }
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/connexion");
+  };
+
+  if (!user) return <div className="text-center py-10">Chargement...</div>;
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -91,17 +83,25 @@ const Profile = () => {
         <div className="px-6 py-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800">Mon Profil</h2>
-            <button
-              onClick={() => {
-                setIsEditing(!isEditing);
-                setError("");
-                setSuccessMessage("");
-              }}
-              className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md transition duration-300"
-              disabled={isLoading}
-            >
-              {isEditing ? "Annuler" : "Modifier"}
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  setIsEditing(!isEditing);
+                  setError("");
+                  setSuccessMessage("");
+                }}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md transition duration-300"
+                disabled={isLoading}
+              >
+                {isEditing ? "Annuler" : "Modifier"}
+              </button>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-300"
+              >
+                Déconnexion
+              </button>
+            </div>
           </div>
 
           {error && (
