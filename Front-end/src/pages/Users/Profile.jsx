@@ -1,33 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext"; // Assure-toi que le chemin est correct
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({ username: "", email: "" });
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
   const navigate = useNavigate();
 
-  // Chargement des infos utilisateur
+  // Si aucun utilisateur n'est présent, redirige vers la page de connection
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (!userData) {
+    if (!user) {
       navigate("/connexion");
-      return;
+    } else {
+      setFormData({
+        username: user.username || "",
+        email: user.email || "",
+      });
     }
+  }, [user, navigate]);
 
-    const parsedUser = JSON.parse(userData);
-    setUser(parsedUser);
-    setFormData({
-      username: parsedUser.username || "",
-      email: parsedUser.email || "",
-    });
-  }, [navigate]);
-
-  // Gestion des champs de formulaire
+  // Gestion des changements dans les champs du formulaire
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -35,7 +31,7 @@ const Profile = () => {
     setSuccessMessage("");
   };
 
-  // Soumission du formulaire
+  // Soumission du formulaire de mise à jour du profil
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -70,9 +66,11 @@ const Profile = () => {
     }
   };
 
+  // Gestion de la déconnection : on vide le localStorage, on met à jour le contexte et on redirige
   const handleLogout = () => {
     localStorage.removeItem("user");
-    navigate("/connexion");
+    setUser(null);
+    navigate("/connection");
   };
 
   if (!user) return <div className="text-center py-10">Chargement...</div>;
@@ -99,7 +97,7 @@ const Profile = () => {
                 onClick={handleLogout}
                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-300"
               >
-                Déconnexion
+                Déconnection
               </button>
             </div>
           </div>

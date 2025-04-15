@@ -39,6 +39,7 @@ def register():
     users_collection.insert_one(user)
     return jsonify({"message": "User created successfully"}), 201
 
+
 @auth_api.route('/auth/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -66,6 +67,8 @@ def login():
         "email": user['email'],
         "favorites": user['favorites']
     }), 200 
+
+
 @auth_api.route('/api/users/update', methods=['PUT'])
 def update_user():
     data = request.get_json()
@@ -151,8 +154,3 @@ def add_favorite():
     )
 
     return jsonify({"message": "ok"}), 200
-
-
-@auth_api.route('/api/users/remove-favorite', methods=['POST'])
-def remove_favorite():
-    pass
