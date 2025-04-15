@@ -1,22 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-
 function Home() {
-  const [data, setData] = useState(null);
-
-  const fetchAPI = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/api/test");
-      console.log(response.data);
-      setData(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchAPI();
-  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-orange-50">
