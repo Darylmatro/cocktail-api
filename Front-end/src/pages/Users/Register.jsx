@@ -1,117 +1,151 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext";
 
-function Register() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+const Register = () => {
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setError("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
-    if (!username || !email || !password) {
-      setError("Tous les champs sont requis");
-      return;
-    }
-
-    if (!email.includes("@")) {
-      setError("Email invalide");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Le mot de passe doit contenir au moins 6 caractères");
-      return;
-    }
+    setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/auth/register", {
+      // 1. Inscription
+      const registerRes = await fetch("http://localhost:5000/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, email, password }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      const registerData = await registerRes.json();
 
-      if (response.ok) {
-        alert("Inscription réussie ! Vous allez être redirigé.");
-        navigate("/connexion");
-      } else {
-        setError(data.error || "Erreur lors de l'inscription");
+      if (!registerRes.ok) {
+        throw new Error(registerData.error || "Erreur lors de l'inscription");
       }
-    } catch (error) {
-      console.error("Erreur:", error);
-      setError("Erreur de connexion au serveur");
+
+      // 2. connection automatique après inscription
+      const loginRes = await fetch("http://localhost:5000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+        }),
+      });
+
+      const loginData = await loginRes.json();
+
+      if (!loginRes.ok) {
+        throw new Error(
+          loginData.error || "Erreur de connection après inscription"
+        );
+      }
+
+      const userData = {
+        _id: loginData._id,
+        username: loginData.username,
+        email: loginData.email,
+      };
+
+      localStorage.setItem("user", JSON.stringify(userData));
+      setUser(userData);
+      navigate("/connection"); // ou "/profil" si c'est le nom de ta route
+    } catch (err) {
+      console.error("Erreur:", err);
+      setError(err.message || "Erreur inconnue");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Inscription</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+          Inscription
+        </h2>
+
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block mb-1 font-semibold">
+            <label className="block text-sm font-medium text-gray-700">
               Nom d'utilisateur
             </label>
             <input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
               required
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-orange-500 focus:ring-orange-500"
             />
           </div>
 
           <div>
-            <label className="block mb-1 font-semibold">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               required
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-orange-500 focus:ring-orange-500"
             />
           </div>
 
           <div>
-            <label className="block mb-1 font-semibold">Mot de passe</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Mot de passe
+            </label>
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               required
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-orange-500 focus:ring-orange-500"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-200"
+            disabled={isLoading}
+            className={`w-full ${
+              isLoading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-orange-500 hover:bg-orange-600"
+            } text-white py-2 px-4 rounded-md transition duration-300`}
           >
-            S'inscrire
+            {isLoading ? "Création du compte..." : "S'inscrire"}
           </button>
         </form>
-
-        <p className="mt-4 text-center">
-          Déjà inscrit ?{" "}
-          <span
-            onClick={() => navigate("/connexion")}
-            className="text-blue-500 hover:underline cursor-pointer"
-          >
-            Se connecter
-          </span>
-        </p>
       </div>
     </div>
   );
-}
+};
 
 export default Register;

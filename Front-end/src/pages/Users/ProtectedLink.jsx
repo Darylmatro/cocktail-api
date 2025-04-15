@@ -8,7 +8,7 @@ function ProtectedLink({ to, children }) {
     if (!user) {
       e.preventDefault();
       alert("Vous devez être connecté pour accéder à cette fonctionnalité");
-      navigate("/connexion");
+      navigate("/connection");
     }
   };
 

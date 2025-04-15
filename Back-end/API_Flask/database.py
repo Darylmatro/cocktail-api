@@ -17,7 +17,7 @@ class Database:
             self._connection.admin.command('ping')
             print("Pinged your deployment. You successfully connected to MongoDB!")
         except Exception as e:
-            print("ERREUR de connexion à la base de données")
+            print("ERREUR de connection à la base de données")
             print(e)
 
     @property

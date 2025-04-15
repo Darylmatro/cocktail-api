@@ -11,10 +11,10 @@ const Profile = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
-  // Si aucun utilisateur n'est présent, redirige vers la page de connexion
+  // Si aucun utilisateur n'est présent, redirige vers la page de connection
   useEffect(() => {
     if (!user) {
-      navigate("/connexion");
+      navigate("/connection");
     } else {
       setFormData({
         username: user.username || "",
@@ -60,17 +60,17 @@ const Profile = () => {
       setIsEditing(false);
     } catch (err) {
       console.error("Erreur de mise à jour:", err);
-      setError(err.message || "Erreur de connexion au serveur");
+      setError(err.message || "Erreur de connection au serveur");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Gestion de la déconnexion : on vide le localStorage, on met à jour le contexte et on redirige
+  // Gestion de la déconnection : on vide le localStorage, on met à jour le contexte et on redirige
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
-    navigate("/connexion");
+    navigate("/connection");
   };
 
   if (!user) return <div className="text-center py-10">Chargement...</div>;
@@ -97,7 +97,7 @@ const Profile = () => {
                 onClick={handleLogout}
                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-300"
               >
-                Déconnexion
+                Déconnection
               </button>
             </div>
           </div>

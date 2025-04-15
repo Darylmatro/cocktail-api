@@ -5,8 +5,8 @@ from flask_cors import CORS
 cocktail_api = Blueprint('cocktail_api', __name__)
 cors = CORS(cocktail_api, origins='*')
 
-connexion_test = Database()
-cocktail_collection = connexion_test.get_database["cocktails"]
+connection_test = Database()
+cocktail_collection = connection_test.get_database["cocktails"]
 
 # TODO
 # newCocktail: ajout option Catégorie

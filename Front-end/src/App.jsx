@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 //import { useContext } from "react";
 
 import AppHeader from "./components/header";
-import AppFooter from "./components/footer"
+import AppFooter from "./components/footer";
 
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";

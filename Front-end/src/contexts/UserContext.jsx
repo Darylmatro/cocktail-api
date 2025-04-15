@@ -5,20 +5,31 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // Au chargement : récupérer l'utilisateur depuis le localStorage
+  // Récupération de l'utilisateur depuis le localStorage au premier chargement
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser && parsedUser._id && parsedUser.username) {
+          setUser(parsedUser);
+        } else {
+          console.warn("User data invalid, clearing localStorage.");
+          localStorage.removeItem("user");
+        }
+      }
+    } catch (error) {
+      console.error("Erreur de parsing des données utilisateur :", error);
+      localStorage.removeItem("user");
     }
   }, []);
 
-  // À chaque changement de user : mettre à jour le localStorage
+  // À chaque mise à jour de l'utilisateur, on met à jour localStorage
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
     } else {
-      localStorage.removeItem("user"); // Nettoyage à la déconnexion
+      localStorage.removeItem("user"); // Déconnection ou absence de user
     }
   }, [user]);
 

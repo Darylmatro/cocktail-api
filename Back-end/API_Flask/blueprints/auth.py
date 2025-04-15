@@ -60,7 +60,7 @@ def login():
     # Retourner les informations de l'utilisateur (sans le mot de passe)
     return jsonify({
         "message": "Login successful",
-        "userId": str(user['_id']),
+        "_id": str(user['_id']),
         "username": user['username'],
         "email": user['email']
     }), 200 
