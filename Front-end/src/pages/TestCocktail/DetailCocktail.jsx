@@ -7,6 +7,9 @@ function DetailCocktail() {
     const { name } = useParams();
     const navigate = useNavigate();
     const [data, setData] = useState([]);
+    const [favoritesCocktails, setFavoritesCocktails] = useState([]);
+
+    //const enFavori = favoritesCocktails.includes(name);
 
     const user = localStorage.getItem("user");
     const userData = user ? JSON.parse(user) : null;
@@ -15,19 +18,63 @@ function DetailCocktail() {
         try {
             const url = `http://localhost:5000/api/cocktail/read/${name}`;
             const response = await axios.get(url);
-            console.log(response.data);
             setData(response.data);
         } catch (error) {
             console.error(error);
         }
     };
 
+    const fetchFavorites = async () => {
+        try {
+            const userId = userData.userId
+            const url = `http://localhost:5000/api/users/favorites`;
+            const response = await axios.post(url, { userId }, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            console.log(response.data)
+            setFavoritesCocktails(response.data)
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
         fetchAPI();
+        fetchFavorites();
     }, [name]);
 
+
+
+    const handleFavorite = async (cocktailName, userId) => {
+        let newFavoriteCocktail;
+
+        // retirer si déjà dans favoris
+        if (favoritesCocktails.includes(cocktailName)) { //cocktail déjà présent dans les favoris
+            newFavoriteCocktail = favoritesCocktails.filter(item => item !== cocktailName);
+
+        // ajouter si pas dans favoris
+        } else {
+            newFavoriteCocktail = [...favoritesCocktails, cocktailName];
+        }
+
+        try {
+            const url = `http://localhost:5000/api/users/add-favorite`;
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {"Content-Type": "application/json",},
+                body: JSON.stringify({ newFavoriteCocktail , userId}),
+              });
+              //console.log(response.data)
+        } catch (erreur) {
+            console.error(erreur);
+            fetchFavorites();
+        }
+        setFavoritesCocktails(newFavoriteCocktail)
+    }
+
     const handleDelete = async (cocktailName) => {
-        console.log(cocktailName)
         try {
             await axios.post(`http://localhost:5000/api/cocktail/delete/${cocktailName}`, data);
             alert("Cocktail supprimé avec succès !");
@@ -60,6 +107,12 @@ function DetailCocktail() {
                         <p>{cocktail.preparation}</p>
                     </div>
                     <p>Auteur: {cocktail.author}</p>
+
+                    {userData && (
+                        <button onClick={() => handleFavorite(cocktail.name, userData.userId)} className='bg-green'>
+                            {favoritesCocktails.includes(cocktail.name) ? "Retirer favori" : "Ajouter favori"}
+                        </button>
+                    )}
 
                     <button onClick={() => navigate(`/testCocktail/detail/${name}/api`)}>API Cocktail</button>
 
