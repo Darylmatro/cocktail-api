@@ -11,7 +11,9 @@ import Cookies from "./pages/Cookies";
 import Accessibilite from "./pages/Accessibilite";
 
 import ListCocktail from "./pages/TestCocktail/ListCocktail";
+import APIListCocktail from "./pages/TestCocktail/ApiListCocktail";
 import DetailCocktail from "./pages/TestCocktail/DetailCocktail";
+import APIDetailCocktail from "./pages/TestCocktail/ApiDetailCocktail";
 import SearchCocktail from "./pages/TestCocktail/SearchCocktail";
 import NewCocktail from "./pages/TestCocktail/NewCocktail";
 
@@ -28,6 +30,8 @@ function AppContent() {
     localStorage.removeItem("token");
     setUser(null);
   };
+
+  const routeAPI = location.pathname.endsWith("/api");
 
   return (
     <>
@@ -70,12 +74,6 @@ function AppContent() {
                 >
                   Profil
                 </Link>
-                <button
-                  onClick={handleLogout}
-                  className="text-gray-700 hover:text-orange-500 font-medium transition duration-300"
-                >
-                  Déconnexion
-                </button>
               </>
             ) : (
               <>
