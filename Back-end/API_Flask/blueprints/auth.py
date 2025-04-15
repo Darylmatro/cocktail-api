@@ -123,7 +123,6 @@ def favorites_cocktails():
         return jsonify({"error": "User not found"}), 404
 
     favorites = user.get('favorites', [])
-    print("Favoris ffffffffffffffff: ", favorites)
     return jsonify(favorites), 200
 
 

@@ -49,10 +49,11 @@ function AppContent() {
           <Route path="*" element={<NotFound />} />
 
           <Route path="/testCocktail/list" element={<ListCocktail />} />
-          <Route
-            path="/testCocktail/detail/:name"
-            element={<DetailCocktail />}
-          />
+          <Route path="testCocktail/list/api" element={<APIListCocktail />} />
+
+          <Route path="/testCocktail/detail/:name" element={<DetailCocktail />} />
+          <Route path="/testCocktail/detail/:name/api" element={<APIDetailCocktail />} />
+
           <Route path="/testCocktail/search" element={<SearchCocktail />} />
           <Route path="/testCocktail/new" element={<NewCocktail />} />
 

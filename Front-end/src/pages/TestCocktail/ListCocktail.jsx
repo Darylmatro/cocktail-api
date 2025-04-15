@@ -46,7 +46,7 @@ function ListCocktail() {
 
     // Placeholder image if cocktail doesn't have one
     const getImageUrl = (cocktail) => {
-        return cocktail.image_url || `/images/cocktails/default-cocktail.jpg`;
+        return cocktail.image_url || `../../../public/Mojito.webp`;
     };
 
     // Handle ingredient filter toggle
@@ -186,47 +186,61 @@ function ListCocktail() {
                     <p className="text-gray-500">Essayez de modifier vos critères de recherche</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                     {filteredCocktails.map((cocktail, index) => (
-                        <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                            <div className="p-6">
-                                <div className="flex justify-center mb-6">
-                                    <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-orange-300 group">
+                        <div key={index} className="relative group">
+                            {/* Circular card with hover effect */}
+                            <div className="w-full aspect-square rounded-full overflow-hidden shadow-lg transition-all duration-300 transform group-hover:scale-95 mx-auto max-w-[250px]">
+                                <div className="w-full h-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center p-1">
+                                    <div className="w-full h-full rounded-full overflow-hidden relative bg-white">
+                                        {/* Cocktail image */}
                                         <img 
                                             src={getImageUrl(cocktail)} 
                                             alt={cocktail.name}
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:rotate-[360deg]"
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                         />
+                                        
+                                        {/* Overlay with name always visible */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-4">
+                                            <h3 className="text-xl font-bold text-white text-center mb-2 drop-shadow-md">
+                                                {cocktail.name}
+                                            </h3>
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                <h3 className="text-2xl font-bold text-center text-gray-800 mb-3">{cocktail.name}</h3>
-                                
-                                <div className="flex justify-center space-x-4 mb-4">
-                                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${cocktail.alcohol ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
-                                        {cocktail.alcohol ? `${cocktail.alcohol_level}°` : 'Sans alcool'}
-                                    </span>
-                                </div>
-                                
-                                <div className="mb-4">
-                                    <h4 className="text-lg font-semibold text-gray-700 mb-2">Ingrédients:</h4>
-                                    <ul className="space-y-1">
-                                        {cocktail.ingredients.map((ingredient, idx) => (
-                                            <li key={idx} className="text-gray-600 flex items-center">
-                                                <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
-                                                {ingredient}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                
-                                <div className="mt-6 flex justify-center">
-                                    <Link 
-                                        to={`/testCocktail/detail/${cocktail.name || index}`} 
-                                        className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full transition duration-300"
-                                    >
-                                        Voir la recette
-                                    </Link>
+                            </div>
+                            
+                            {/* Information card that appears on hover */}
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto">
+                                <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 w-full max-w-[280px] transform transition-transform duration-300 scale-90 group-hover:scale-100">
+                                    <h3 className="text-xl font-bold text-gray-800 mb-3 text-center">{cocktail.name}</h3>
+                                    
+                                    <div className="flex justify-center mb-3">
+                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${cocktail.alcohol ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
+                                            {cocktail.alcohol ? `${cocktail.alcohol_level}°` : 'Sans alcool'}
+                                        </span>
+                                    </div>
+                                    
+                                    <div className="mb-4">
+                                        <h4 className="text-sm font-semibold text-gray-700 mb-1">Ingrédients:</h4>
+                                        <ul className="space-y-1 max-h-24 overflow-y-auto scrollbar-thin scrollbar-thumb-orange-300 pr-2">
+                                            {cocktail.ingredients.map((ingredient, idx) => (
+                                                <li key={idx} className="text-sm text-gray-600 flex items-center">
+                                                    <span className="w-1.5 h-1.5 bg-orange-400 rounded-full mr-1.5 flex-shrink-0"></span>
+                                                    {ingredient}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    
+                                    <div className="flex justify-center">
+                                        <Link 
+                                            to={`/testCocktail/detail/${cocktail.name}`} 
+                                            className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-medium py-2 px-5 rounded-full transition duration-300 text-sm"
+                                        >
+                                            Voir la recette
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>

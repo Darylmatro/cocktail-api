@@ -14,7 +14,7 @@ function AppFooter() {
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center mb-4">
                 <img
-                  src="/images/cocktail-logo.png"
+                  src="../../public/Cocktail.webp"
                   alt="Logo L'atelier du cocktail"
                   className="h-10 w-auto mr-3"
                 />

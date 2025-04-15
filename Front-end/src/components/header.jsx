@@ -13,7 +13,7 @@ function AppHeader() {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <img
-                src="/images/cocktail-logo.png"
+                src="../../public/Cocktail.webp"
                 alt="Logo L'atelier du cocktail"
                 className="h-12 w-auto mr-3"
               />
@@ -41,7 +41,7 @@ function AppHeader() {
               <>
                 <Link
                   to="/profil"
-                  className="text-gray-700 hover:text-orange-500 font-medium transition duration-300"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full font-medium transition duration-300"
                 >
                   Profil
                 </Link>
@@ -62,12 +62,6 @@ function AppHeader() {
                 </Link>
               </>
             )}
-            <Link
-              to="/contact"
-              className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full font-medium transition duration-300"
-            >
-              Contact
-            </Link>
           </nav>
 
           {/* Menu mobile (hamburger) */}

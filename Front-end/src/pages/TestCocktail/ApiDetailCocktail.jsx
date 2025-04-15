@@ -1,10 +1,11 @@
 import React, { useState , useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function APIDetailCocktail() {
 
     const { name } = useParams();
+    const navigate = useNavigate();
     const [data, setData] = useState([]);
 
     const fetchAPI = async () => {
@@ -23,9 +24,14 @@ function APIDetailCocktail() {
     }, []);
 
     return (
-        <pre>
-            {JSON.stringify(data[0], null, 2)}
-        </pre>
+        <div>
+            <button onClick={() => navigate(`/testCocktail/detail/${name}`)} className='bg-orange-500 p-5'>Retour au Cocktail</button>
+
+            <pre>
+                {JSON.stringify(data[0], null, 2)}
+            </pre>
+        </div>
+        
     );
 }
 
