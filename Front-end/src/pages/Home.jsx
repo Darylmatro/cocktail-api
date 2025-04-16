@@ -11,40 +11,41 @@ function Home() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // Fetch featured cocktails
                 const cocktailsResponse = await axios.get('http://localhost:5000/api/cocktail/list');
                 
-                // affichage aléatoire de 3 cocktails
+                // Get 3 random cocktails for the featured section
                 const randomCocktails = cocktailsResponse.data
                     .sort(() => 0.5 - Math.random())
                     .slice(0, 3);
                 
                 setFeaturedCocktails(randomCocktails);
                 
-                // catégories de cocktails
+                // Create categories based on available cocktails
                 const categoriesData = [
                     {
                         id: 1,
                         name: "Cocktails Tropicaux",
                         description: "Découvrez des saveurs exotiques",
-                        image: "/images/tropical-cocktails.jpg"
+                        image: "./CocktailTropicaux.webp"
                     },
                     {
                         id: 2,
                         name: "Mocktails",
                         description: "Sans alcool mais pleins de saveurs",
-                        image: "/images/mocktails.jpg"
+                        image: "./Mocktails.webp"
                     },
                     {
                         id: 3,
                         name: "Classiques",
                         description: "Les incontournables revisités",
-                        image: "/images/classic-cocktails.jpg"
+                        image: "./Classiques.webp"
                     },
                     {
                         id: 4,
                         name: "Fruités",
                         description: "Explosions de saveurs fruitées",
-                        image: "/images/fruit-cocktails.jpg"
+                        image: "./Fruités.webp"
                     }
                 ];
                 
@@ -61,13 +62,17 @@ function Home() {
 
     const handleNewsletterSubmit = (e) => {
         e.preventDefault();
+        // Here you would connect to your API to save the email
         console.log("Email submitted:", email);
+        // Reset the form
         setEmail('');
+        // Show success message (you could add a state for this)
         alert("Merci pour votre inscription!");
     };
 
+    // Get image for a cocktail or use placeholder
     const getCocktailImage = (cocktail) => {
-        return cocktail.image_url || "/images/default-cocktail.jpg";
+        return cocktail.image_url || `../../../public/Mojito.webp`;
     };
 
     return (
@@ -85,7 +90,7 @@ function Home() {
                 </div>
             </div>
 
-            {/* Catégories */}
+            {/* Featured Categories */}
             <div className="container mx-auto px-6 py-16">
                 <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">Catégories Populaires</h2>
                 {loading ? (
@@ -95,19 +100,23 @@ function Home() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {categories.map((category) => (
-                            <div key={category.id} className="bg-white rounded-xl shadow-md overflow-hidden transition duration-300 transform hover:scale-105">
+                            <Link 
+                                key={category.id} 
+                                to={`/testCocktail/list?category=${encodeURIComponent(category.name)}`}
+                                className="bg-white rounded-xl shadow-md overflow-hidden transition duration-300 transform hover:scale-105"
+                            >
                                 <div className="h-48 bg-cover bg-center" style={{ backgroundImage: `url('${category.image}')` }}></div>
                                 <div className="p-6">
                                     <h3 className="text-xl font-semibold text-gray-800 mb-2">{category.name}</h3>
                                     <p className="text-gray-600">{category.description}</p>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 )}
             </div>
 
-            {/* Cocktails mis en avant */}
+            {/* Featured Cocktails */}
             <div className="bg-blue-50 py-16">
                 <div className="container mx-auto px-6">
                     <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">Cocktails Tendance</h2>
@@ -150,7 +159,7 @@ function Home() {
                 </div>
             </div>
 
-            {/* Newsletter */}
+            {/* Newsletter Section */}
             <div className="container mx-auto px-6 py-16">
                 <div className="bg-gradient-to-r from-orange-400 to-pink-500 rounded-2xl shadow-xl p-10 md:p-16">
                     <div className="max-w-xl mx-auto text-center">
