@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext";
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -7,6 +8,7 @@ function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,6 +42,7 @@ function Register() {
 
       if (response.ok) {
         alert("Inscription réussie ! Vous allez être redirigé vers la page de connexion.");
+        setUser(data);
         navigate("/connexion");
       } else {
         setError(data.error || "Une erreur est survenue lors de l'inscription");

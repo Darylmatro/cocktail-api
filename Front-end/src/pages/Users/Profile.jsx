@@ -94,7 +94,7 @@ const Profile = () => {
 
     try {
 
-      if (!user._id || !formData.username || !formData.email) {
+      if (!user.userId || !formData.username || !formData.email) {
         throw new Error("Le nom d'utilisateur et l'email sont requis");
       }
 
@@ -102,7 +102,7 @@ const Profile = () => {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: user._id,
+          userId: user.userId,
           username: formData.username,
           email: formData.email,
         }),
@@ -304,73 +304,104 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className="place-items-center mt-20">
-        <h1 className="text-5xl font-bold">Cocktails favoris</h1>
-        {/*liste des cocktails favoris*/}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-16">
-                    {cocktailsList.map((cocktail, index) => 
-                        favoritesCocktails && favoritesCocktails.includes(cocktail.name) ? (
-                        <div className="relative group">
-                            {/* Icône avec image cocktail */}
-                            <div key={index} className="w-full aspect-square rounded-full overflow-hidden shadow-lg transition-all duration-300 transform group-hover:scale-95 mx-auto max-w-[250px]">
-                                <div className="w-full h-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center p-1">
-                                    <div className="w-full h-full rounded-full overflow-hidden relative bg-white">
-                                        {/* Recherche de l'image */}
-                                        <img 
-                                            src={getImageUrl(cocktail)} 
-                                            alt={cocktail.name}
-                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                        />
-                                        
-                                        {/* Overlay de l'icône */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-4">
-                                            <h3 className="text-xl font-bold text-white text-center mb-2 drop-shadow-md">
-                                                {cocktail.name}
-                                            </h3>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            {/* Carte d'information hover */}
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto">
-                                <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 w-full max-w-[280px] transform transition-transform duration-300 scale-90 group-hover:scale-100">
-                                    <h3 className="text-xl font-bold text-gray-800 mb-3 text-center">{cocktail.name}</h3>
-                                    
-                                    <div className="flex justify-center mb-3">
-                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${cocktail.alcohol ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}`}>
-                                            {cocktail.alcohol ? `${cocktail.alcohol_level}°` : 'Sans alcool'}
-                                        </span>
-                                    </div>
-                                    
-                                    <div className="mb-4">
-                                        <h4 className="text-sm font-semibold text-gray-700 mb-1">Ingrédients:</h4>
-                                        <ul className="space-y-1 max-h-24 overflow-y-auto scrollbar-thin scrollbar-thumb-orange-300 pr-2">
-                                            {cocktail.ingredients.map((ingredient, idx) => (
-                                                <li key={idx} className="text-sm text-gray-600 flex items-center">
-                                                    <span className="w-1.5 h-1.5 bg-orange-400 rounded-full mr-1.5 flex-shrink-0"></span>
-                                                    {ingredient}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    
-                                    <div className="flex justify-center">
-                                        <Link 
-                                            to={`/testCocktail/detail/${cocktail.name}`} 
-                                            className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-medium py-2 px-5 rounded-full transition duration-300 text-sm"
-                                        >
-                                            Voir la recette
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        ) : (null)
-                    )}
+      <div className="max-w-7xl mx-auto mt-16 bg-white rounded-2xl shadow-xl overflow-hidden relative z-10">
+              <div className="bg-gradient-to-r from-pink-400 to-purple-500 p-6 text-white">
+                <h2 className="text-2xl font-bold flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                  </svg>
+                  Mes Cocktails Favoris
+                </h2>
+                <p className="text-white opacity-80 ml-10">Retrouvez tous vos cocktails préférés en un seul endroit</p>
+              </div>
+              
+              {favoritesCocktails.length === 0 ? (
+                <div className="p-12 text-center">
+                  <div className="w-24 h-24 mx-auto mb-6 bg-pink-50 rounded-full flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-pink-300" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">Aucun cocktail favori</h3>
+                  <p className="text-gray-500 max-w-md mx-auto mb-8">Explorez notre collection de cocktails et ajoutez vos préférés à vos favoris pour les retrouver facilement ici.</p>
+                  <Link to="/testCocktail" className="inline-flex items-center px-5 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                    Découvrir des cocktails
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </Link>
                 </div>
-
-      </div>
+              ) : (
+                <div className="p-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                    {cocktailsList.map((cocktail, index) => 
+                      favoritesCocktails && favoritesCocktails.includes(cocktail.name) ? (
+                        <div key={index} className="group relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                          <div className="absolute top-3 right-3 z-10">
+                            <div className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full shadow-sm">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-pink-500" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                          </div>
+                          
+                          <div className="h-52 overflow-hidden">
+                            <img 
+                              src={getImageUrl(cocktail)} 
+                              alt={cocktail.name}
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = "/Mojito.webp";
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-60 group-hover:opacity-70 transition-opacity"></div>
+                          </div>
+                          
+                          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                            <h3 className="text-xl font-bold mb-1 drop-shadow-md">{cocktail.name}</h3>
+                            <div className="flex items-center space-x-2">
+                              <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${cocktail.alcohol ? 'bg-pink-500/80 text-white' : 'bg-green-500/80 text-white'}`}>
+                                {cocktail.alcohol ? `${cocktail.alcohol_level}°` : 'Sans alcool'}
+                              </span>
+                              <span className="text-xs text-white/90">{cocktail.ingredients.length} ingrédients</span>
+                            </div>
+                          </div>
+                          
+                          <div className="absolute inset-0 bg-gradient-to-t from-pink-600/90 to-purple-600/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div className="text-center p-4">
+                              <h3 className="text-xl font-bold text-white mb-3">{cocktail.name}</h3>
+                              <div className="mb-4 max-h-24 overflow-y-auto scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent px-2">
+                                <ul className="space-y-1">
+                                  {cocktail.ingredients.slice(0, 5).map((ingredient, idx) => (
+                                    <li key={idx} className="text-sm text-white/90 flex items-center">
+                                      <span className="w-1.5 h-1.5 bg-white rounded-full mr-1.5 flex-shrink-0"></span>
+                                      {ingredient}
+                                    </li>
+                                  ))}
+                                  {cocktail.ingredients.length > 5 && (
+                                    <li className="text-sm text-white/80 italic">+ {cocktail.ingredients.length - 5} autres</li>
+                                  )}
+                                </ul>
+                              </div>
+                              <Link 
+                                to={`/testCocktail/detail/${cocktail.name}`}
+                                className="inline-flex items-center px-4 py-2 bg-white text-pink-600 font-medium rounded-full hover:bg-pink-50 transition-colors duration-300 text-sm"
+                              >
+                                Voir la recette
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      ) : null
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
     </div>
   );
 };
