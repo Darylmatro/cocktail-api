@@ -124,11 +124,31 @@ function DetailCocktail() {
                         <div className="bg-gradient-to-r from-orange-400 to-pink-500 p-6 text-white">
                             
                             {userData && (
-                                <button onClick={() => handleFavorite(cocktail.name, userData.userId)} className='bg-pink-500 p-5'>
-                                    {favoritesCocktails.includes(cocktail.name) ? "Retirer favori" : "Ajouter favori"}
-                                </button>
+                                <button 
+                                onClick={() => handleFavorite(cocktail.name, userData.userId)} 
+                                className="px-4 py-2 bg-white text-pink-600 hover:bg-pink-100 rounded-lg transition-colors shadow-md flex items-center"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path 
+                                        fillRule="evenodd" 
+                                        d={favoritesCocktails.includes(cocktail.name) 
+                                            ? "M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" 
+                                            : "M8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z"} 
+                                        clipRule="evenodd" 
+                                    />
+                                </svg>
+                                {favoritesCocktails.includes(cocktail.name) ? "Retirer des favoris" : "Ajouter aux favoris"}
+                            </button>
                             )}
-                            <button onClick={() => navigate(`/testCocktail/detail/${name}/api`)} className='bg-orange-500 p-5'>API Cocktail</button>
+                            <button 
+                                    onClick={() => navigate(`/testCocktail/detail/${name}/api`)} 
+                                    className="px-4 py-2 bg-white text-orange-600 hover:bg-orange-100 rounded-lg transition-colors shadow-md flex items-center"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                    API Cocktail
+                                </button>
 
                             <h1 className="text-4xl font-bold mb-2">{cocktail.name}</h1>
                             <div className="flex items-center space-x-4">
