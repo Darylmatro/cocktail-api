@@ -66,7 +66,7 @@ const Register = () => {
 
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
-      navigate("/connection");
+      navigate("/connection"); // ou "/profil" si c'est le nom de ta route
     } catch (err) {
       console.error("Erreur:", err);
       setError(err.message || "Erreur inconnue");

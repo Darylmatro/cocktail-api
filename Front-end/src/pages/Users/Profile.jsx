@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../../contexts/UserContext";
+import { UserContext } from "../../contexts/UserContext"; // Assure-toi que le chemin est correct
+
 const Profile = () => {
   const { user, setUser } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
@@ -10,7 +11,7 @@ const Profile = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
-  // redirection vers la page de connection
+  // Si aucun utilisateur n'est présent, redirige vers la page de connection
   useEffect(() => {
     if (!user) {
       navigate("/connection");
