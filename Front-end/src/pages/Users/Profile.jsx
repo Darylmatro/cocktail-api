@@ -13,8 +13,6 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const [favoritesCocktails, setFavoritesCocktails] = useState([]);
-  const [allIngredients, setAllIngredients] = useState([]);
-  const [loading, setLoading] = useState(true);
   
 
   const fetchFavCocktails = async () => {
@@ -30,12 +28,8 @@ const Profile = () => {
                 ingredientSet.add(ingredient);
             });
         });
-        setAllIngredients(Array.from(ingredientSet).sort());
-        
-        setLoading(false);
     } catch (error) {
         console.error(error);
-        setLoading(false);
     }
 };
 
@@ -72,6 +66,11 @@ const Profile = () => {
     setIsLoading(true);
 
     try {
+
+      if (!user._id || !formData.username || !formData.email) {
+        throw new Error("Le nom d'utilisateur et l'email sont requis");
+      }
+
       const response = await fetch("http://localhost:5000/api/users/update", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -84,7 +83,10 @@ const Profile = () => {
 
       const data = await response.json();
 
-      if (!response.ok) throw new Error(data.error || "Erreur de mise à jour");
+      if (!response.ok) {
+        console.error("Server response:", data);
+        throw new Error(data.error || "Erreur de mise à jour");
+      }
 
       const updatedUser = { ...user, ...formData };
       localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -106,115 +108,179 @@ const Profile = () => {
     navigate("/connection");
   };
 
-  if (!user) return <div className="text-center py-10">Chargement...</div>;
+  if (!user) return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-orange-50 to-pink-50 flex justify-center items-center">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-orange-500"></div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="px-6 py-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Mon Profil</h2>
-            <div className="flex gap-2">
-              <button
-                onClick={() => {
-                  setIsEditing(!isEditing);
-                  setError("");
-                  setSuccessMessage("");
-                }}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md transition duration-300"
-                disabled={isLoading}
-              >
-                {isEditing ? "Annuler" : "Modifier"}
-              </button>
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-300"
-              >
-                Déconnection
-              </button>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-orange-50 to-pink-50 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Decorative shapes */}
+      <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-orange-100 rounded-full opacity-50 transform rotate-45"></div>
+      <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-blue-100 rounded-full opacity-50"></div>
+      <div className="absolute top-1/2 left-1/4 w-40 h-40 bg-pink-100 rounded-full opacity-30"></div>
+      
+      <div className="max-w-2xl mx-auto relative z-10">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="bg-gradient-to-r from-orange-400 to-pink-500 p-6 text-white">
+            <h1 className="text-3xl font-bold">Mon Profil</h1>
+            <p className="text-white opacity-80">Gérez vos informations personnelles</p>
           </div>
-
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
-            </div>
-          )}
-
-          {successMessage && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-              {successMessage}
-            </div>
-          )}
-
-          {isEditing ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Nom d'utilisateur
-                </label>
-                <input
-                  type="text"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
-                  required
-                  disabled={isLoading}
-                />
+          
+          <div className="p-8">
+            {error && (
+              <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-md shadow-sm">
+                <div className="flex items-center">
+                  <svg className="h-5 w-5 mr-2 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                  <p>{error}</p>
+                </div>
               </div>
+            )}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
-                  required
-                  disabled={isLoading}
-                />
+            {successMessage && (
+              <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-md shadow-sm">
+                <div className="flex items-center">
+                  <svg className="h-5 w-5 mr-2 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <p>{successMessage}</p>
+                </div>
               </div>
+            )}
 
-              <button
-                type="submit"
-                className={`w-full ${
-                  isLoading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-orange-500 hover:bg-orange-600"
-                } text-white py-2 px-4 rounded-md transition duration-300`}
-                disabled={isLoading}
-              >
-                {isLoading ? "Mise à jour..." : "Enregistrer les modifications"}
-              </button>
-            </form>
-          ) : (
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Nom d'utilisateur
-                </label>
-                <p className="mt-1 text-lg text-gray-900">{user.username}</p>
-              </div>
+            {isEditing ? (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nom d'utilisateur
+                  </label>
+                  <input
+                    type="text"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50 transition-colors"
+                    required
+                    disabled={isLoading}
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
-                <p className="mt-1 text-lg text-gray-900">{user.email}</p>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50 transition-colors"
+                    required
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <button
+                    type="submit"
+                    className={`flex-1 ${
+                      isLoading
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-orange-500 hover:bg-orange-600"
+                    } text-white py-3 px-6 rounded-lg shadow-md transition duration-300 flex justify-center items-center`}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Mise à jour...
+                      </>
+                    ) : (
+                      "Enregistrer"
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditing(false);
+                      setFormData({
+                        username: user.username || "",
+                        email: user.email || "",
+                      });
+                    }}
+                    className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-6 rounded-lg shadow-md transition duration-300"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="space-y-6">
+                <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center">
+                      <div className="bg-orange-100 p-3 rounded-full mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-semibold text-gray-800">{user.username}</h2>
+                        <p className="text-gray-500">{user.email}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300 flex items-center"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                      Modifier
+                    </button>
+                  </div>
+                  
+                  <div className="border-t border-gray-200 pt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-500 mb-1">Nom d'utilisateur</h3>
+                        <p className="text-lg text-gray-800">{user.username}</p>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-500 mb-1">Email</h3>
+                        <p className="text-lg text-gray-800">{user.email}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex justify-end">
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg shadow-md transition duration-300 flex items-center"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Déconnexion
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
-      <div>
-        <h1>Cocktails favoris</h1>
+      <div className="place-items-center mt-20">
+        <h1 className="text-5xl font-bold">Cocktails favoris</h1>
         {/*liste des cocktails favoris*/}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-16">
                     {favoritesCocktails.map((cocktail, index) => (
                       <div>
                         {user.favorites.includes(cocktail.name) && (

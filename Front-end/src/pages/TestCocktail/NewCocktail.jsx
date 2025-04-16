@@ -12,7 +12,7 @@ function NewCocktail() {
     const [alcohol, setAlcohol] = useState(false);
     const [alcohol_level, setAlcohol_level] = useState(0);
     const [preparation, setPreparation] = useState("");
-    const [categorie, setCategorie] = useState("classique");
+    const [categorie, setCategorie] = useState("Classiques");
     const [loading, setLoading] = useState(false);
 
     // Fonction pour ajouter un champ d'ingrédient
@@ -124,10 +124,10 @@ function NewCocktail() {
                                     value={categorie}
                                     onChange={(e) => setCategorie(e.target.value)}
                                 >
-                                    <option value="Classique">Classique</option>
-                                    <option value="Fruité">Fruité</option>
-                                    <option value="Cocktail Tropicaux">Cocktail Tropicaux</option>
-                                    <option value="Mocktail">Mocktail</option>
+                                    <option value="Classiques">Classiques</option>
+                                    <option value="Fruités">Fruités</option>
+                                    <option value="Cocktails Tropicaux">Cocktails Tropicaux</option>
+                                    <option value="Mocktails">Mocktails</option>
                                 </select>
                             </div>
                         </div>

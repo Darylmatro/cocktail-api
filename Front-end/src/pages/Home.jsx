@@ -11,17 +11,16 @@ function Home() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch featured cocktails
                 const cocktailsResponse = await axios.get('http://localhost:5000/api/cocktail/list');
                 
-                // Get 3 random cocktails for the featured section
+                // affichage aléatoire de 3 cocktails
                 const randomCocktails = cocktailsResponse.data
                     .sort(() => 0.5 - Math.random())
                     .slice(0, 3);
                 
                 setFeaturedCocktails(randomCocktails);
                 
-                // Create categories based on available cocktails
+                // catégories de cocktails
                 const categoriesData = [
                     {
                         id: 1,
@@ -62,15 +61,11 @@ function Home() {
 
     const handleNewsletterSubmit = (e) => {
         e.preventDefault();
-        // Here you would connect to your API to save the email
         console.log("Email submitted:", email);
-        // Reset the form
         setEmail('');
-        // Show success message (you could add a state for this)
         alert("Merci pour votre inscription!");
     };
 
-    // Get image for a cocktail or use placeholder
     const getCocktailImage = (cocktail) => {
         return cocktail.image_url || "/images/default-cocktail.jpg";
     };
@@ -90,7 +85,7 @@ function Home() {
                 </div>
             </div>
 
-            {/* Featured Categories */}
+            {/* Catégories */}
             <div className="container mx-auto px-6 py-16">
                 <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">Catégories Populaires</h2>
                 {loading ? (
@@ -112,7 +107,7 @@ function Home() {
                 )}
             </div>
 
-            {/* Featured Cocktails */}
+            {/* Cocktails mis en avant */}
             <div className="bg-blue-50 py-16">
                 <div className="container mx-auto px-6">
                     <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">Cocktails Tendance</h2>
@@ -155,7 +150,7 @@ function Home() {
                 </div>
             </div>
 
-            {/* Newsletter Section */}
+            {/* Newsletter */}
             <div className="container mx-auto px-6 py-16">
                 <div className="bg-gradient-to-r from-orange-400 to-pink-500 rounded-2xl shadow-xl p-10 md:p-16">
                     <div className="max-w-xl mx-auto text-center">
