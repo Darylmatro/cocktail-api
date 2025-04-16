@@ -13,13 +13,31 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const [favoritesCocktails, setFavoritesCocktails] = useState([]);
+  const [cocktailsList, setCocktailsList] = useState([]);
   
 
   const fetchFavCocktails = async () => {
     try {
+      const userId = user.userId
+      console.log("USERNAME", userId)
+      const url = `http://localhost:5000/api/users/favorites`;
+      const response = await axios.post(
+          url, 
+          { userId }, // Données envoyées au serveur
+          { headers: { "Content-Type": "application/json" } } // Configuration
+      );
+      //console.log(response.data)
+      setFavoritesCocktails(response.data)
+      console.log("FAVCOCKTAIL: ", response.data)
+  } catch (error) {
+      console.error(error);
+  }
+  }
+
+  const fetchCocktailsList = async () => {
+    try {
         const response = await axios.get('http://localhost:5000/api/cocktail/list');
-        console.log(response.data);
-        setFavoritesCocktails(response.data);
+        setCocktailsList(response.data);
         
         // Extract all unique ingredients for filters
         const ingredientSet = new Set();
@@ -31,7 +49,7 @@ const Profile = () => {
     } catch (error) {
         console.error(error);
     }
-};
+  };
 
   // Si aucun utilisateur n'est présent, redirige vers la page de connection
   useEffect(() => {
@@ -42,9 +60,18 @@ const Profile = () => {
         username: user.username || "",
         email: user.email || "",
       });
+      fetchCocktailsList();
       fetchFavCocktails();
     }
   }, [user, navigate]);
+
+  /*useEffect(() => {
+    if (user) {
+      console.log("Favoris de l'utilisateur:", user.favorites);
+      console.log("Tous les cocktails:", cocktailsList);
+    }
+  }, [user, cocktailsList]);*/
+  
 
   const getImageUrl = (cocktail) => {
     return cocktail.image_url || `../../../public/Mojito.webp`;
@@ -281,12 +308,11 @@ const Profile = () => {
         <h1 className="text-5xl font-bold">Cocktails favoris</h1>
         {/*liste des cocktails favoris*/}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-16">
-                    {favoritesCocktails.map((cocktail, index) => (
-                      <div>
-                        {user.favorites.includes(cocktail.name) && (
-                        <div key={index} className="relative group">
+                    {cocktailsList.map((cocktail, index) => 
+                        favoritesCocktails && favoritesCocktails.includes(cocktail.name) ? (
+                        <div className="relative group">
                             {/* Icône avec image cocktail */}
-                            <div className="w-full aspect-square rounded-full overflow-hidden shadow-lg transition-all duration-300 transform group-hover:scale-95 mx-auto max-w-[250px]">
+                            <div key={index} className="w-full aspect-square rounded-full overflow-hidden shadow-lg transition-all duration-300 transform group-hover:scale-95 mx-auto max-w-[250px]">
                                 <div className="w-full h-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center p-1">
                                     <div className="w-full h-full rounded-full overflow-hidden relative bg-white">
                                         {/* Recherche de l'image */}
@@ -340,9 +366,8 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
-                        )}
-                      </div>
-                    ))}
+                        ) : (null)
+                    )}
                 </div>
 
       </div>

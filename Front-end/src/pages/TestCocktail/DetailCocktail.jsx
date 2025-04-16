@@ -29,13 +29,15 @@ function DetailCocktail() {
     const fetchFavorites = async () => {
         try {
             const userId = userData.userId
+            console.log("Utilisateur: ", userId)
+            console.log("Cocktails favori: ", userData.favorites)
             const url = `http://localhost:5000/api/users/favorites`;
-            const response = await axios.post(url, { userId }, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            console.log(response.data)
+            const response = await axios.post(
+                url, 
+                { userId }, // Données envoyées au serveur
+                { headers: { "Content-Type": "application/json" } } // Configuration
+            );
+            //console.log(response.data)
             setFavoritesCocktails(response.data)
         } catch (error) {
             console.error(error);

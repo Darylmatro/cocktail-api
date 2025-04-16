@@ -52,14 +52,12 @@ def cocktail_create():
 # Recherche d'un cocktail un cocktail spécifique
 @cocktail_api.route('/api/cocktail/read/<cocktail_name>', methods=['GET', 'POST'])
 def cocktail_read(cocktail_name):
-    print(f"URL appelée : {request.url}") # Debug
     data_list = []
     try:
         for data in cocktail_collection.find({"name":cocktail_name}):
-            print(data)
             data.pop("_id")
             data_list.append(data)
-            print("Cocktail trouvé: ", data)
+            #print("Cocktail trouvé: ", data)
         return jsonify(data_list)
     except Exception as e:
         print("Erreur: ", e)
@@ -83,7 +81,6 @@ def cocktail_update():
 @cocktail_api.route('/api/cocktail/delete/<cocktail_name>', methods=['GET', 'POST'])
 def cocktail_delete(cocktail_name):
     try:
-        print("url donné:", cocktail_name)
         cocktail_collection.delete_one({"name":cocktail_name})
         return jsonify({"message": "Données supprimées"})
     except Exception as e:

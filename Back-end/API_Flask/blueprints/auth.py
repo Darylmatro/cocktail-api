@@ -72,7 +72,7 @@ def login():
 @auth_api.route('/api/users/update', methods=['PUT'])
 def update_user():
     data = request.get_json()
-    print("Données reçues:", data)
+    #print("Données reçues:", data)
 
     if not data or 'userId' not in data or 'username' not in data or 'email' not in data:
         return jsonify({
